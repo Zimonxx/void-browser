@@ -1,0 +1,38 @@
+/* ============================================================
+   VOID — Pure AMOLED Design Tokens
+   Każda wartość jest zmienną: w Fazie 2/3 będzie nadpisywana
+   z ustawień użytkownika i Void Studio.
+   ============================================================ */
+:root {
+  /* Kolory */
+  --void-bg: #000000;
+  --void-elevated: rgba(8, 8, 8, 0.85);
+  --void-border: #141414;
+  --void-border-hover: #2a2a2a;
+  --void-accent: #ffffff;
+  --void-text: #e6e6e6;
+  --void-text-dim: #6b6b6b;
+  --void-text-faint: #333333;
+
+  /* Wymiary */
+  --void-titlebar-height: 40px;
+  --void-tab-width: 200px;
+  --void-tab-min-width: 48px;
+  --void-tab-radius: 8px;
+  --void-urlbar-width: 520px;
+  --void-urlbar-height: 30px;
+  --void-urlbar-radius: 10px;
+  --void-gap: 6px;
+  --void-content-inset: 0px;
+  --void-content-radius: 0px;
+
+  /* Typografia */
+  --void-font: 'Inter', 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  --void-font-size: 12.5px;
+
+  /* Animacje */
+  --void-anim-speed: 1;
+  --void-ease-spring: cubic-bezier(0.22, 1.2, 0.36, 1);
+  --void-dur-fast: calc(140ms * var(--void-anim-speed));
+  --void-dur-med: calc(260ms * var(--void-anim-speed));
+}

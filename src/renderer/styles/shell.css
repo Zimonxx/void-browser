@@ -1,0 +1,101 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  background: var(--void-bg);
+  color: var(--void-text);
+  font-family: var(--void-font);
+  font-size: var(--void-font-size);
+  overflow: hidden;
+  user-select: none;
+}
+
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+.void-shell { display: flex; flex-direction: column; height: 100%; }
+
+/* ---------- Titlebar (karty + URL + okno) ---------- */
+.void-titlebar {
+  height: var(--void-titlebar-height);
+  display: flex;
+  align-items: center;
+  gap: var(--void-gap);
+  padding: 0 var(--void-gap);
+  -webkit-app-region: drag;
+  border-bottom: 1px solid var(--void-border);
+}
+.void-titlebar > * { -webkit-app-region: no-drag; }
+.void-titlebar .void-spacer { flex: 1; -webkit-app-region: drag; align-self: stretch; }
+
+.void-logo {
+  font-weight: 700; letter-spacing: 0.32em; font-size: 11px;
+  color: var(--void-text-dim); padding: 0 8px; -webkit-app-region: drag;
+}
+
+/* ---------- Nav buttons ---------- */
+.void-iconbtn {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: grid; place-items: center;
+  color: var(--void-text-dim);
+  transition: background var(--void-dur-fast), color var(--void-dur-fast), transform var(--void-dur-fast) var(--void-ease-spring);
+}
+.void-iconbtn:hover:not(:disabled) { background: #0d0d0d; color: var(--void-text); }
+.void-iconbtn:active:not(:disabled) { transform: scale(0.88); }
+.void-iconbtn:disabled { opacity: 0.25; cursor: default; }
+
+/* ---------- Tabs ---------- */
+.void-tabs { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 0 1 auto; overflow: hidden; }
+.void-tab {
+  position: relative;
+  display: flex; align-items: center; gap: 8px;
+  width: var(--void-tab-width); min-width: var(--void-tab-min-width);
+  height: 28px; padding: 0 6px 0 10px;
+  border-radius: var(--void-tab-radius);
+  color: var(--void-text-dim);
+  border: 1px solid transparent;
+  animation: void-tab-in var(--void-dur-med) var(--void-ease-spring);
+  transition: color var(--void-dur-fast), border-color var(--void-dur-fast), background var(--void-dur-fast);
+}
+.void-tab:hover { color: var(--void-text); background: #070707; }
+.void-tab.active { color: var(--void-text); border-color: var(--void-border-hover); background: #050505; }
+.void-tab__icon { width: 14px; height: 14px; flex: none; border-radius: 3px; }
+.void-tab__title { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; }
+.void-tab__close { width: 18px; height: 18px; border-radius: 5px; opacity: 0; display: grid; place-items: center; }
+.void-tab:hover .void-tab__close, .void-tab.active .void-tab__close { opacity: 0.6; }
+.void-tab__close:hover { opacity: 1 !important; background: #1a1a1a; }
+.void-tab__loader {
+  width: 12px; height: 12px; border-radius: 50%; flex: none;
+  border: 1.5px solid var(--void-text-faint); border-top-color: var(--void-accent);
+  animation: void-spin 0.7s linear infinite;
+}
+@keyframes void-tab-in { from { opacity: 0; transform: translateY(4px) scale(0.96); } }
+@keyframes void-spin { to { transform: rotate(360deg); } }
+
+/* ---------- URL bar ---------- */
+.void-urlbar {
+  width: var(--void-urlbar-width); max-width: 60vw;
+  height: var(--void-urlbar-height);
+  border-radius: var(--void-urlbar-radius);
+  border: 1px solid var(--void-border);
+  display: flex; align-items: center; padding: 0 12px; gap: 8px;
+  transition: border-color var(--void-dur-fast), width var(--void-dur-med) var(--void-ease-spring);
+}
+.void-urlbar:hover { border-color: var(--void-border-hover); }
+.void-urlbar:focus-within { border-color: var(--void-accent); width: calc(var(--void-urlbar-width) * 1.3); }
+.void-urlbar input {
+  flex: 1; min-width: 0; background: none; border: none; outline: none;
+  color: var(--void-text); font: inherit; user-select: text;
+}
+.void-urlbar__display { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: text; }
+.void-url-proto { color: var(--void-text-faint); }
+.void-url-host { color: var(--void-text); }
+.void-url-path { color: var(--void-text-dim); }
+.void-lock { color: var(--void-text-dim); flex: none; }
+
+/* ---------- Content area (WebContentsView sits here) ---------- */
+.void-content {
+  flex: 1;
+  margin: var(--void-content-inset);
+  border-radius: var(--void-content-radius);
+  background: var(--void-bg);
+}
