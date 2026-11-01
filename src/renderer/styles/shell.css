@@ -13,10 +13,13 @@ html, body, #root {
 button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
 .void-shell { display: flex; flex-direction: column; height: 100%; }
+.void-middle { flex: 1; display: flex; min-height: 0; }
+.void-spacer { flex: 1; align-self: stretch; -webkit-app-region: drag; }
 
-/* ---------- Titlebar (karty + URL + okno) ---------- */
+/* ---------- Toolbar ---------- */
 .void-titlebar {
   height: var(--void-titlebar-height);
+  flex: none;
   display: flex;
   align-items: center;
   gap: var(--void-gap);
@@ -24,43 +27,47 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
   -webkit-app-region: drag;
   border-bottom: 1px solid var(--void-border);
 }
-.void-titlebar > * { -webkit-app-region: no-drag; }
-.void-titlebar .void-spacer { flex: 1; -webkit-app-region: drag; align-self: stretch; }
+.void-titlebar.pos-bottom { border-bottom: none; border-top: 1px solid var(--void-border); }
+.void-titlebar > *:not(.void-spacer):not(.void-logo) { -webkit-app-region: no-drag; }
 
 .void-logo {
   font-weight: 700; letter-spacing: 0.32em; font-size: 11px;
-  color: var(--void-text-dim); padding: 0 8px; -webkit-app-region: drag;
+  color: var(--void-text-dim); padding: 0 8px;
 }
 
-/* ---------- Nav buttons ---------- */
+/* ---------- Icon buttons ---------- */
 .void-iconbtn {
-  width: 28px; height: 28px; border-radius: 8px;
+  width: 28px; height: 28px; border-radius: 8px; flex: none;
   display: grid; place-items: center;
   color: var(--void-text-dim);
   transition: background var(--void-dur-fast), color var(--void-dur-fast), transform var(--void-dur-fast) var(--void-ease-spring);
 }
-.void-iconbtn:hover:not(:disabled) { background: #0d0d0d; color: var(--void-text); }
+.void-iconbtn:hover:not(:disabled), .void-iconbtn.on { background: #0d0d0d; color: var(--void-text); }
 .void-iconbtn:active:not(:disabled) { transform: scale(0.88); }
 .void-iconbtn:disabled { opacity: 0.25; cursor: default; }
 
 /* ---------- Tabs ---------- */
-.void-tabs { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 0 1 auto; overflow: hidden; }
+.void-tabs { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 0 1 auto; overflow: hidden; -webkit-app-region: no-drag; }
+.void-tabs.vertical { flex-direction: column; align-items: stretch; overflow-y: auto; flex: 1; padding: var(--void-gap); }
+
 .void-tab {
   position: relative;
   display: flex; align-items: center; gap: 8px;
   width: var(--void-tab-width); min-width: var(--void-tab-min-width);
-  height: 28px; padding: 0 6px 0 10px;
+  height: var(--void-tab-height); padding: 0 6px 0 10px; flex: 0 1 auto;
   border-radius: var(--void-tab-radius);
   color: var(--void-text-dim);
   border: 1px solid transparent;
   animation: void-tab-in var(--void-dur-med) var(--void-ease-spring);
   transition: color var(--void-dur-fast), border-color var(--void-dur-fast), background var(--void-dur-fast);
 }
+.void-tabs.vertical .void-tab { width: auto; flex: none; }
 .void-tab:hover { color: var(--void-text); background: #070707; }
 .void-tab.active { color: var(--void-text); border-color: var(--void-border-hover); background: #050505; }
 .void-tab__icon { width: 14px; height: 14px; flex: none; border-radius: 3px; }
+.void-tab__icon--empty { background: #1a1a1a; }
 .void-tab__title { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; }
-.void-tab__close { width: 18px; height: 18px; border-radius: 5px; opacity: 0; display: grid; place-items: center; }
+.void-tab__close { width: 18px; height: 18px; border-radius: 5px; opacity: 0; display: grid; place-items: center; flex: none; }
 .void-tab:hover .void-tab__close, .void-tab.active .void-tab__close { opacity: 0.6; }
 .void-tab__close:hover { opacity: 1 !important; background: #1a1a1a; }
 .void-tab__loader {
@@ -71,32 +78,116 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 @keyframes void-tab-in { from { opacity: 0; transform: translateY(4px) scale(0.96); } }
 @keyframes void-spin { to { transform: rotate(360deg); } }
 
+.void-tabstrip {
+  flex: none; display: flex; align-items: center; gap: var(--void-gap);
+  height: calc(var(--void-tab-height) + 10px); padding: 0 var(--void-gap);
+  border-bottom: 1px solid var(--void-border); -webkit-app-region: drag;
+}
+.void-tabstrip.pos-bottom { border-bottom: none; border-top: 1px solid var(--void-border); }
+.void-tabstrip > .void-iconbtn { -webkit-app-region: no-drag; }
+
+.void-vtabs {
+  width: var(--void-vtabs-width); flex: none;
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--void-border);
+  transition: width var(--void-dur-med) var(--void-ease-spring);
+}
+.void-vtabs.pos-right { border-right: none; border-left: 1px solid var(--void-border); }
+.void-vtabs__new { padding: var(--void-gap); }
+
 /* ---------- URL bar ---------- */
+.void-urlbar-slot { display: flex; min-width: 0; flex: 1 1 auto; }
+.void-urlbar-slot.align-left { justify-content: flex-start; }
+.void-urlbar-slot.align-center { justify-content: center; }
+.void-urlbar-slot.align-right { justify-content: flex-end; }
+
 .void-urlbar {
-  width: var(--void-urlbar-width); max-width: 60vw;
+  position: relative;
   height: var(--void-urlbar-height);
+  font-size: var(--void-urlbar-font-size);
   border-radius: var(--void-urlbar-radius);
   border: 1px solid var(--void-border);
   display: flex; align-items: center; padding: 0 12px; gap: 8px;
-  transition: border-color var(--void-dur-fast), width var(--void-dur-med) var(--void-ease-spring);
+  overflow: hidden;
+  transition: border-color var(--void-dur-fast), width var(--void-dur-med) var(--void-ease-spring), background var(--void-dur-fast);
 }
 .void-urlbar:hover { border-color: var(--void-border-hover); }
-.void-urlbar:focus-within { border-color: var(--void-accent); width: calc(var(--void-urlbar-width) * 1.3); }
+.void-urlbar.editing { border-color: var(--void-accent); }
+.void-urlbar.borderless { border-color: transparent; }
+.void-urlbar.borderless:hover, .void-urlbar.borderless.editing { background: #070707; border-color: transparent; }
+
 .void-urlbar input {
   flex: 1; min-width: 0; background: none; border: none; outline: none;
   color: var(--void-text); font: inherit; user-select: text;
 }
 .void-urlbar__display { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: text; }
-.void-url-proto { color: var(--void-text-faint); }
-.void-url-host { color: var(--void-text); }
-.void-url-path { color: var(--void-text-dim); }
+.void-urlbar__measure { position: absolute; visibility: hidden; white-space: nowrap; pointer-events: none; left: -9999px; }
+
+.void-url-proto, .void-url-sub, .void-url-sep, .void-url-hash { color: var(--void-url-proto); }
+.void-url-host, .void-url-title { color: var(--void-url-host); }
+.void-url-path { color: var(--void-url-path); }
+.void-url-query { color: var(--void-url-query); }
+.void-url-text { color: var(--void-text); }
+.void-url-link { cursor: pointer; border-radius: 4px; padding: 1px 2px; transition: background var(--void-dur-fast), color var(--void-dur-fast); }
+.void-url-link:hover { background: #151515; color: var(--void-accent); }
 .void-lock { color: var(--void-text-dim); flex: none; }
 
 /* ---------- Content area (WebContentsView sits here) ---------- */
 .void-content {
-  flex: 1;
+  flex: 1; min-width: 0;
   margin: var(--void-content-inset);
   border-radius: var(--void-content-radius);
   background: var(--void-bg);
 }
 
+/* ---------- Settings panel ---------- */
+.void-settings {
+  width: 360px; flex: none;
+  display: flex; flex-direction: column;
+  border-left: 1px solid var(--void-border);
+  background: var(--void-bg);
+  animation: vs-in var(--void-dur-med) var(--void-ease-spring);
+}
+@keyframes vs-in { from { opacity: 0; transform: translateX(16px); } }
+.vs-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-weight: 600; letter-spacing: 0.04em; }
+.vs-tabs { display: flex; gap: 2px; padding: 0 10px 8px; border-bottom: 1px solid var(--void-border); }
+.vs-tabs button { padding: 5px 10px; border-radius: 7px; color: var(--void-text-dim); }
+.vs-tabs button:hover { color: var(--void-text); }
+.vs-tabs button.on { color: var(--void-text); background: #0f0f0f; }
+.vs-body { flex: 1; overflow-y: auto; padding: 8px 12px 24px; }
+.vs-body::-webkit-scrollbar { width: 6px; }
+.vs-body::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 3px; }
+
+.vs-group { padding: 10px 0; border-bottom: 1px solid #0c0c0c; }
+.vs-group h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--void-text-dim); font-weight: 600; margin-bottom: 8px; }
+.vs-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; }
+.vs-label { color: var(--void-text); flex: none; max-width: 45%; }
+.vs-ctrl { display: flex; align-items: center; gap: 6px; flex: 1; justify-content: flex-end; min-width: 0; }
+.vs-hint { color: var(--void-text-dim); font-size: 11px; line-height: 1.5; margin: 4px 0 6px; user-select: text; }
+
+.vs-ctrl input[type='range'] { flex: 1; min-width: 60px; accent-color: var(--void-accent); height: 3px; }
+.vs-num, .vs-text, .vs-io {
+  background: #050505; border: 1px solid var(--void-border); border-radius: 6px;
+  color: var(--void-text); font: inherit; outline: none; padding: 3px 6px; user-select: text;
+}
+.vs-num { width: 58px; text-align: right; }
+.vs-text { flex: 1; min-width: 0; }
+.vs-hex { flex: none; width: 80px; font-family: ui-monospace, Consolas, monospace; }
+.vs-num:focus, .vs-text:focus, .vs-io:focus { border-color: var(--void-border-hover); }
+.vs-unit { color: var(--void-text-dim); width: 18px; font-size: 11px; }
+.vs-ctrl input[type='color'] { width: 26px; height: 22px; border: 1px solid var(--void-border); border-radius: 5px; background: none; padding: 0; cursor: pointer; }
+
+.vs-seg { display: flex; flex-wrap: wrap; gap: 2px; justify-content: flex-end; background: #050505; border: 1px solid var(--void-border); border-radius: 8px; padding: 2px; }
+.vs-seg button { padding: 3px 8px; border-radius: 6px; color: var(--void-text-dim); font-size: 11.5px; transition: background var(--void-dur-fast), color var(--void-dur-fast); }
+.vs-seg button:hover { color: var(--void-text); }
+.vs-seg button.on { background: #1a1a1a; color: var(--void-text); }
+
+.vs-toggle { width: 32px; height: 18px; border-radius: 9px; background: #151515; position: relative; transition: background var(--void-dur-fast); }
+.vs-toggle i { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #555; transition: transform var(--void-dur-med) var(--void-ease-spring), background var(--void-dur-fast); }
+.vs-toggle.on { background: #2a2a2a; }
+.vs-toggle.on i { transform: translateX(14px); background: var(--void-accent); }
+
+.vs-io { width: 100%; height: 160px; resize: vertical; font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+.vs-actions { display: flex; gap: 6px; margin-top: 8px; }
+.vs-actions button { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--void-border); color: var(--void-text-dim); }
+.vs-actions button:hover { color: var(--void-text); border-color: var(--void-border-hover); }
