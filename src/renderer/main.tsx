@@ -4,3 +4,4 @@ import './styles/amoled-tokens.css'
 import './styles/shell.css'
 
 createRoot(document.getElementById('root')!).render(<App />)
+

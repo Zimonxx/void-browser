@@ -50,3 +50,4 @@ export function installSmartUserAgent(): void {
     callback({ requestHeaders: details.requestHeaders })
   })
 }
+

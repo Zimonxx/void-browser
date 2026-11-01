@@ -54,3 +54,4 @@ export function UrlBar({ url, icon }: { url: string; icon?: ReactNode }) {
     </div>
   )
 }
+

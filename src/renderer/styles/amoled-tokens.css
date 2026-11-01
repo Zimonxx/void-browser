@@ -36,3 +36,4 @@
   --void-dur-fast: calc(140ms * var(--void-anim-speed));
   --void-dur-med: calc(260ms * var(--void-anim-speed));
 }
+

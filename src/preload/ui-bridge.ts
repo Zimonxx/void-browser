@@ -32,3 +32,4 @@ const api = {
 
 contextBridge.exposeInMainWorld('void', api)
 export type VoidApi = typeof api
+

@@ -152,3 +152,4 @@ export function normalizeInput(input: string): string {
   if (!/\s/.test(s) && /^[^\s]+\.[a-z]{2,}(:\d+)?(\/.*)?$/i.test(s)) return 'https://' + s
   return 'https://duckduckgo.com/?q=' + encodeURIComponent(s)
 }
+
