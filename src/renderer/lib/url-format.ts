@@ -75,3 +75,4 @@ export function formatUrl(raw: string, title: string, s: Settings['urlbar']): Se
 function decodeSafe(s: string): string {
   try { return decodeURIComponent(s) } catch { return s }
 }
+

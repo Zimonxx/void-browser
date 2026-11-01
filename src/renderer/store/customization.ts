@@ -63,6 +63,22 @@ export interface Settings {
     urlProto: string
     urlQuery: string
   }
+  anim: {
+    speed: number // 0 = instant, 1 = normalnie, 2 = cinematic
+    easing: 'spring' | 'smooth' | 'snappy' | 'bounce' | 'linear' | 'custom'
+    bezier: string
+  }
+  studio: {
+    css: string
+  }
+}
+
+export const EASINGS: Record<Exclude<Settings['anim']['easing'], 'custom'>, string> = {
+  spring: 'cubic-bezier(0.22, 1.2, 0.36, 1)',
+  smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  snappy: 'cubic-bezier(0.2, 0.9, 0.1, 1)',
+  bounce: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  linear: 'linear'
 }
 
 export const DEFAULTS: Settings = {
@@ -95,7 +111,9 @@ export const DEFAULTS: Settings = {
     bg: '#000000', accent: '#ffffff', text: '#e6e6e6', textDim: '#6b6b6b',
     border: '#141414', borderHover: '#2a2a2a',
     urlHost: '#ffffff', urlPath: '#777777', urlProto: '#333333', urlQuery: '#4a4a4a'
-  }
+  },
+  anim: { speed: 1, easing: 'spring', bezier: 'cubic-bezier(0.22, 1.2, 0.36, 1)' },
+  studio: { css: '/* Void Studio — Twój własny CSS dla interfejsu przeglądarki */\n' }
 }
 
 const KEY = 'void.settings.v1'
@@ -176,6 +194,19 @@ export function applyCssVars(s: Settings): void {
   r.setProperty('--void-content-inset', px(s.layout.contentInset))
   r.setProperty('--void-content-radius', px(s.layout.contentRadius))
   r.setProperty('--void-font-size', px(s.layout.fontSize))
+
+  r.setProperty('--void-anim-speed', String(Math.max(0, s.anim.speed)))
+  r.setProperty('--void-ease-spring', s.anim.easing === 'custom' ? s.anim.bezier : EASINGS[s.anim.easing])
+
+  // Void Studio: własny CSS użytkownika
+  let tag = document.getElementById('void-user-css') as HTMLStyleElement | null
+  if (!tag) {
+    tag = document.createElement('style')
+    tag.id = 'void-user-css'
+    document.head.appendChild(tag)
+  }
+  if (tag.textContent !== s.studio.css) tag.textContent = s.studio.css
 }
 
 applyCssVars(state)
+

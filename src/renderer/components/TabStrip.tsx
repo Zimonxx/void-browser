@@ -41,3 +41,4 @@ export function TabStrip({ tabs, activeId, vertical }: { tabs: TabState[]; activ
     </nav>
   )
 }
+

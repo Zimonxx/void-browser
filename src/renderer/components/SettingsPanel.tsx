@@ -81,7 +81,7 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
 }
 
 /* ---------- Panel ---------- */
-const TABS = ['URL', 'Układ', 'Karty', 'Kolory', 'Profil'] as const
+const TABS = ['URL', 'Układ', 'Karty', 'Kolory', 'Animacje', 'Profil'] as const
 
 export function SettingsPanel({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>('URL')
@@ -186,6 +186,19 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
           </>
         )}
 
+        {tab === 'Animacje' && (
+          <Group title="Animacje">
+            <Num sec="anim" k="speed" label="Mnożnik czasu" min={0} max={3} step={0.05} unit="×" />
+            <p className="vs-hint">0× = natychmiast (brutalist), 1× = domyślnie, 2×+ = kinowo</p>
+            <Sel sec="anim" k="easing" label="Krzywa" options={[
+              ['spring', 'Sprężyna'], ['bounce', 'Odbicie'], ['smooth', 'Płynna'],
+              ['snappy', 'Szybka'], ['linear', 'Liniowa'], ['custom', 'Własna']
+            ]} />
+            {s.anim.easing === 'custom' && <Txt sec="anim" k="bezier" label="cubic-bezier" />}
+            <div className="vs-anim-demo"><i /></div>
+          </Group>
+        )}
+
         {tab === 'Profil' && (
           <Group title="Eksport / import (.voidtheme)">
             <textarea className="vs-io" value={io} spellCheck={false} onChange={(e) => setIo(e.target.value)} placeholder="Wklej JSON profilu..." />
@@ -201,3 +214,4 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
     </aside>
   )
 }
+

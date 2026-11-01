@@ -191,3 +191,10 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 .vs-actions { display: flex; gap: 6px; margin-top: 8px; }
 .vs-actions button { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--void-border); color: var(--void-text-dim); }
 .vs-actions button:hover { color: var(--void-text); border-color: var(--void-border-hover); }
+
+.vs-anim-demo { margin-top: 10px; height: 34px; border: 1px solid var(--void-border); border-radius: 8px; position: relative; overflow: hidden; }
+.vs-anim-demo i {
+  position: absolute; top: 8px; left: 8px; width: 16px; height: 16px; border-radius: 5px; background: var(--void-accent);
+  animation: vs-demo calc(1200ms * var(--void-anim-speed) + 1ms) var(--void-ease-spring) infinite alternate;
+}
+@keyframes vs-demo { to { left: calc(100% - 24px); } }
